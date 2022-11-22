@@ -1,0 +1,101 @@
+ create table books(
+    isbn number(5) primary key,
+    title varchar2(15),
+    author varchar2(15),
+    publisher varchar2(15));
+    
+     create table student(
+   usn number(5) primary key,
+    name varchar2(10));
+    
+     create table borrows(
+    
+    isbn number(5) references books(isbn) on delete cascade,
+    usn number(5) references student(usn) on delete cascade
+    );
+    
+    
+  insert all
+    into books values(1,'database','benjamin','xyz')
+    into books values(2,'datasecurity','orelly','abc')
+    into books values(3,'java','harry','pqr')
+    into books values(4,'c++','sierra','def')
+    into books values(5,'deep_learning','kelvin','xyz')
+    select * from dual;
+    
+ insert all
+    into student values(10,'abhi')
+    into student values(20,'ram')
+    into student values(30,'priya')
+    into student values(40,'monu')
+    into student values(50,'yuvi')
+    select * from dual;
+    
+    
+   insert all
+    into borrows values(1,10)
+    into borrows values(1,30)
+    into borrows values(2,40)
+    into borrows values(3,10)
+    into borrows values(3,50)
+    into borrows values(2,30)
+    into borrows values(2,20)
+    into borrows values(4,30)
+   into borrows values(5,50)
+   into borrows values(4,40)
+   select * from dual;
+    
+    
+    
+    --1
+    SELECT S.NAME
+    FROM STUDENT S
+    WHERE S.USN IN
+    (
+    SELECT B.USN
+    FROM BORROWS B
+    WHERE B.ISBN = 1 OR B.ISBN = 2
+    );
+    
+    SELECT * FROM BORROWS;
+    
+   --2
+ 
+    select *
+    from student s
+    where s.usn in
+    (
+    select b.usn 
+    from borrows b
+    where b.isbn in
+    (
+    select bk.isbn
+    from books bk
+    where bk.title = 'database'
+    )
+    );
+    
+    --3
+    select b.usn,s.name,count(b.isbn)
+    from student s,borrows b
+    where s.usn =b.usn
+    group by b.usn,s.name;
+    
+    INSERT INTO BOOKS(ISBN,TITLE,AUTHOR,PUBLISHER) VALUES(6,'DATA_MINING','VGH','BJHJ');
+    
+    
+    SELECT *
+   FROM BOOKS BK 
+   WHERE BK.TITLE LIKE 'DA%' AND BK.ISBN NOT IN 
+   (
+   SELECT B.ISBN
+   FROM BORROWS B
+   );
+    
+    
+    
+    
+    
+    
+    
+    
