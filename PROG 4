@@ -1,0 +1,183 @@
+
+ create table customer(
+   cid number(5) primary key,
+    cname varchar2(10),
+    address varchar2(10),
+    phno number(10));
+
+
+ create table branch(
+    bid number(5) primary key,
+    bname varchar2(10),
+    bcity varchar2(10));
+
+
+
+ create table account(
+    anum number(10) primary key,
+    cid number(5) references customer(cid) on delete cascade,
+    bid number(5) references branch(bid) on delete cascade,
+    atype varchar2(10),
+    astatus varchar2(10),
+    balance number(10));
+
+
+
+ create table transaction(
+    cid number(5) references customer(cid) on delete cascade,
+    anum number(10) references account(anum) on delete cascade,
+    type varchar2(10),
+    amount number(10));
+    
+   insert all
+    into customer values(1,'abhi','muz',7903988)
+    into customer values(2,'ram','bombay',9525559)
+    into customer values(3,'monty','chennai',83404041)
+    into customer values(4,'mona','delhi',9967432)
+    into customer values(5,'fruty','haryana',87345809)
+    into customer values(6,'singh','indore',6794321)
+    into customer values(7,'rahul','patna',9756321)
+    into customer values(8,'shiva','pune',7654309)
+   into customer values(9,'pari','ranchi',88650426)
+   select * from dual; 
+   
+   
+   select * from customer;
+   
+   
+    insert all
+    into branch values(10,'karol bagh','delhi')
+    into branch values(20,'daryaganj','delhi')
+    into branch values(30,'patelnagar','delhi')
+    into branch values(40,'bhagwanpur','muz')
+    into branch values(50,'juhu','bombay')
+    into branch values(60,'kankarbagh','patna')
+    into branch values(70,'thane','bombay')
+    select * from dual;
+   
+   
+    select * from account;
+   
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(11,1,10,'S','O',6532);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(22,2,10,'C','O',65325);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(33,3,20,'S','O',2552);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(44,4,30,'S','O',15532);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(55,5,40,'C','O',8632);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(66,6,50,'C','O',6572);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(77,7,60,'S','O',4562);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(88,8,70,'S','O',78452);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(99,9,50,'C','O',1562);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(111,5,20,'C','O',78712);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(222,1,20,'C','O',78712);
+   INSERT INTO ACCOUNT(ANUM,CID,BID,ATYPE,ASTATUS,BALANCE) VALUES(333,1,10,'C','O',78712);
+   
+   
+   
+   
+   SELECT * FROM ACCOUNT;
+   
+    insert all
+    into transaction values(1,11,'d',200)
+    into transaction values(1,11,'w',100)
+    into transaction values(3,33,'d',100)
+    into transaction values(4,44,'d',500)
+    into transaction values(5,55,'d',700)
+    into transaction values(4,44,'w',300)
+    into transaction values(5,55,'w',200)
+   into transaction values(6,66,'d',100)
+   into transaction values(7,77,'d',800)
+   into transaction values(7,77,'w',100)
+   into transaction values(3,33,'w',900)
+   select * from dual;
+   
+   SELECT * FROM TRANSACTION;
+   
+   insert all
+    into transaction values(9,99,'d',500)
+    into transaction values(5,111,'w',100)
+    into transaction values(8,88,'w',900)
+   select * from dual;
+   
+   
+    
+--   1
+    
+   SELECT *
+   FROM CUSTOMER C
+   WHERE C.CID IN
+   (
+   SELECT A.CID
+   FROM ACCOUNT A
+   WHERE A.ATYPE = 'S'
+   
+   INTERSECT 
+   
+   SELECT X.CID
+   FROM ACCOUNT X
+   WHERE X.ATYPE = 'C'
+   );
+   
+   
+--  2
+   
+    
+  SELECT B.BID,B.BNAME,COUNT(A.CID) NO_OF_ACCOUNT
+  FROM BRANCH B,ACCOUNT A 
+  WHERE B.BID = A.BID
+  GROUP BY B.BID,B.BNAME;
+  
+  
+--  3
+
+SELECT *
+FROM CUSTOMER C
+WHERE C.CID IN
+(
+SELECT T.CID
+FROM TRANSACTION T
+GROUP BY T.CID
+HAVING COUNT(T.CID) >= 3
+);
+
+SELECT T.CID,COUNT(*)
+FROM TRANSACTION T
+GROUP BY T.CID;
+    
+    
+SELECT * FROM TRANSACTION ;  
+
+
+--4
+
+
+
+SELECT *
+FROM BRANCH B
+WHERE B.BID IN
+(
+  SELECT A.BID
+  FROM ACCOUNT A
+  GROUP BY A.BID 
+  HAVING COUNT(A.CID) <
+  (
+  
+    (SELECT COUNT(*)
+    FROM ACCOUNT K
+    )
+    /
+    (SELECT COUNT(*)
+    FROM BRANCH X
+    )
+    )
+    );
+    
+  
+  
+
+
+
+    
+    
+    
+    
+    
