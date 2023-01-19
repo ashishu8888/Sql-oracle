@@ -97,9 +97,10 @@ FROM PROJ p
 WHERE p.PROJAREA = 'DATABASE')
 );
 
-SELECT DNO,COUNT(SSN)
-FROM EMP 
-GROUP BY DNO;
+select d.dnum,d.dname,count(e.ssn) as no_of_emp
+from department d
+join employee e on e.dno = d.dnum
+group by d.dnum,d.dname;
 
 UPDATE WORKS_ON
 SET PID = 5
