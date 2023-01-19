@@ -1,0 +1,50 @@
+
+
+select * from boat;
+select * from sailor;
+select * from reserves;
+
+
+-- 1
+select *
+from boat
+where bid in 
+(
+select bid 
+from reserves
+where sid in
+(
+select sid 
+from sailor
+where sname = 'RAJU'));
+
+-- 2
+
+
+select *
+from boat b
+where not exists
+(
+select * 
+from sailor s
+where not exists
+(
+select * 
+from reserves r
+where s.sid = r.sid AND r.bid = b.bid));
+
+-- 3
+
+select s.sname , count(r.bid) as no_of_boat
+from reserves r
+join sailor s on s.sid = r.sid
+group by s.sname;
+
+-- 4
+select *
+from boat , sailor
+where sname = bname;
+
+
+
+
